@@ -68,13 +68,12 @@ public class LookupTable<K extends Comparable<? super K>, V> implements Map<K, V
 
     @Override
     public V get(Object key) {
-        Entry<K, V> entry = new Entry((K) key, null);
-        return table.get(Collections.binarySearch(table, entry)).getValue();
+        return table.get(Collections.binarySearch(table, new Entry((K) key, null))).getValue();
     }
 
     @Override
     public V put(K key, V value) {
-        int location = table.get(Collections.binarySearch(table, new Entry(key, null)));
+        int location = Collections.binarySearch(table, new Entry((K) key, null));
         table.add(-location - 1, new Entry<>(key, value));
     }
 
