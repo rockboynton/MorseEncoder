@@ -1,19 +1,16 @@
 package boyntonrl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class LookupTable<K extends Comparable<? super K>, V> implements Map<K, V>{
+public class LookupTable<K extends Comparable<? super K>, V>
+        implements Map<K, V>{
 
     public static void main(String[] args) {
 
     }
 
-    private static class Entry<K extends Comparable<? super K>, V> implements
-            Comparable<Entry<K, V>>, Map.Entry<K, V> {
+    private static class Entry<K extends Comparable<? super K>, V>
+            implements Comparable<Entry<K, V>>, Map.Entry<K, V> {
         K key;
         V value;
 
@@ -67,19 +64,31 @@ public class LookupTable<K extends Comparable<? super K>, V> implements Map<K, V
     }
 
     @Override
-    public V get(Object key) {
+    public V get(Object key) throws ClassCastException {
         return table.get(Collections.binarySearch(table, new Entry((K) key, null))).getValue();
     }
 
     @Override
-    public V put(K key, V value) {
+    public V put(K key, V value) throws ClassCastException {
+        V previousValue = null;
         int location = Collections.binarySearch(table, new Entry((K) key, null));
-        table.add(-location - 1, new Entry<>(key, value));
+        if (location > 0) {
+            previousValue = table.get(location).setValue(value);
+        } else {
+            table.add(-location - 1, new Entry<>(key, value));
+        }
+        return previousValue;
     }
 
+    // am i supposed to remove the whole entry or set the value to null?
     @Override
-    public V remove(Object key) {
-        return null;
+    public V remove(Object key) throws ClassCastException {
+        V previousValue = null;
+        int location = Collections.binarySearch(table, new Entry((K) key, null));
+        if (location > 0) {
+            previousValue = table.remove(location).getValue();
+        }
+        return previousValue;
     }
 
     @Override
