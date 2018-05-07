@@ -1,4 +1,4 @@
-A space should be placed between each encoded character.
+A space should be placed between each encoded character45!@#$%^&*().
 
 A **''|''** should be placed between each word.
 
